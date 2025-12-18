@@ -1,0 +1,38 @@
+{
+    "name": "env-interop/interface",
+    "type": "library",
+    "description": "Interoperable environment interfaces for PHP.",
+    "keywords": ["env", "environment", "loader", "parser", "setter", "getter"],
+    "license": "MIT",
+    "homepage": "https://github.com/env-interop/interface",
+    "authors": [
+        {
+            "name": "Paul M. Jones",
+            "email": "pmjones@pmjones.io",
+            "homepage": "https://pmjones.io",
+            "role": "Lead"
+        }
+    ],
+    "require": {
+        "php": "^8.4"
+    },
+    "autoload": {
+        "psr-4" : {
+            "EnvInterop\\Interface\\": "src/"
+        }
+    },
+    "require-dev": {
+        "pds/composer-script-names": "^1.0",
+        "pds/skeleton": "^1.0",
+        "phpstan/phpstan": "^2.0"
+    },
+    "autoload-dev": {
+        "psr-4" : {
+            "EnvInterop\\Interface\\": "tests/"
+        }
+    },
+    "scripts": {
+        "analyze": "./vendor/bin/phpstan",
+        "check": "composer analyze"
+    }
+}

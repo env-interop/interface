@@ -1,0 +1,102 @@
+# Env-Interop Standard Interface Package
+
+This package provides interoperable interfaces to load and parse environment
+files, and encapsulate environment variables, in PHP 8.4 or later. It reflects,
+refines, and reconciles the common practices identified within
+[several pre-existing projects][README-RESEARCH.md].
+
+The standards provided in this package are also informed by:
+
+- https://12factor.net/config
+- https://github.com/bkeepers/dotenv
+- https://github.com/motdotla/dotenv
+
+The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD",
+"SHOULD NOT", "RECOMMENDED",  "MAY", and "OPTIONAL" in this document are to be
+interpreted as described in [BCP 14][] ([RFC 2119][], [RFC 8174][]).
+
+## Interfaces
+
+This package defines the following interfaces:
+
+- [_EnvLoaderService_][] affords loading environment variables parsed from an environment file into `$_ENV` (and possibly elsewhere).
+
+- [_EnvParserService_][] affords parsing a string for environment variables.
+
+- [_EnvSetterService_][] affords modifying an environment variable in `$_ENV` (and possibly elsewhere).
+
+- [_EnvGetter_][] affords getting environment variable values.
+
+- [_EnvThrowable_][] interface extends [_Throwable_][] to mark an [_Exception_][] as environment-related.
+
+- [_EnvTypeAliases_][] provides PHPStan type aliases to aid static analysis.
+
+{{= docs }}
+
+## Implementations
+
+- Directives:
+
+    - Implementations MAY define additional class members not defined in these
+      interfaces.
+
+- Notes:
+
+    - **Reference implementations** may be found at <https://github.com/env-interop/impl>.
+
+## Q & A
+
+### Why not use a general-purpose configuration system?
+
+Environment configuration is specific to the *deployment* and not to the
+*application*. This nuance means a general-purpose configuration
+system would have to be constrained specifically to suit the purpose of
+declaring environment variables. Cf. <https://12factor.net/config>:
+
+> An app's config is everything that is likely to vary between deploys (staging,
+> production, developer environments, etc).
+>
+> ...
+>
+> Note that this definition of "config" does not include internal application
+> config, such as config/routes.rb in Rails, or how code modules are connected
+> in Spring. This type of config does not vary between deploys, and so is best
+> done in the code.
+>
+> Env vars are easy to change between deploys without changing any code; unlike
+> config files, there is little chance of them being checked into the code repo
+> accidentally; and unlike custom config files, or other config mechanisms such
+> as Java System Properties, they are a language- and OS-agnostic standard.
+
+With all that in mind, Env-Interop defines standard interfaces around the
+constraints of deployment-specific, not general-purpose, configuration.
+
+### Why is there no validation interface?
+
+Of the researched projects, a minority check to see if required environment
+variables are set. Of those, only one does any further validation of the
+environment variable values themselves.
+
+The "required to be set" validation is provided by the [_EnvLoaderService_][]
+method `assertEnv()`. Env-Interop advises that any further environment value
+validation is the responsibility of an [_EnvParserService_][] or of an
+[_EnvGetter_][] value object.
+
+* * *
+
+[_EnvGetter_]: #envgetter
+[_EnvLoaderService_]: #envloaderservice
+[_EnvParserService_]: #envparserservice
+[_EnvSetterService_]: #envsetterservice
+[_EnvThrowable_]: #envthrowable
+[_EnvTypeAliases_]: #envtypealiases
+[_Exception_]: https://php.net/Exception
+[_Throwable_]: https://php.net/Throwable
+[`apache_setenv()`]: https://php.net/apache_setenv
+[`define()`]: https://php.net/define
+[`getenv()`]: https://php.net/getenv
+[`putenv()`]: https://php.net/putenv
+[BCP 14]: https://www.rfc-editor.org/info/bcp14
+[README-RESEARCH.md]: ./README-RESEARCH.md
+[RFC 2119]: https://datatracker.ietf.org/doc/html/rfc2119
+[RFC 8174]: https://datatracker.ietf.org/doc/html/rfc8174
