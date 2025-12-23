@@ -23,7 +23,7 @@ This package defines the following interfaces:
 
 - [_EnvParserService_][] affords parsing a string for environment variables.
 
-- [_EnvSetterService_][] affords modifying an environment variable in `$_ENV` (and possibly elsewhere).
+- [_EnvSetterService_][] affords adding or replacing an environment variable in `$_ENV` (and possibly elsewhere).
 
 - [_EnvGetter_][] affords getting environment variable values.
 
@@ -33,8 +33,8 @@ This package defines the following interfaces:
 
 ### _EnvLoaderService_
 
-The [_EnvLoaderService_][] interface affords setting environment variables
-parsed from an environment file into `$_ENV` (and possibly elsewhere).
+The [_EnvLoaderService_][] interface affords loading environment variables
+parsed from environment files into `$_ENV` (and possibly elsewhere).
 
 - Notes:
 
@@ -54,16 +54,66 @@ parsed from an environment file into `$_ENV` (and possibly elsewhere).
 #### _EnvLoaderService_ Methods
 
 - ```php
-  public function loadEnv(string $filename, bool $override = false) : static;
+  public function loadEnv(string $filename) : static;
   ```
-    - Loads environment variables into `$_ENV` (and possibly elsewhere) as
-    parsed from an environment file that exists and is readable.
+    - Adds environment variables to `$_ENV` (and possibly elsewhere) as
+    parsed from an environment file.
 
     - Directives:
 
-        - Implementations MUST throw [_EnvThrowable_][] if the `$filename`
+        - Implementations MUST throw [_EnvLoaderThrowable_][] if `$filename`
           does not exist, is not a file, is not readable, or if reading from
-          the `$filename` fails.
+          `$filename` fails.
+
+        - Implementations MUST parse the contents of `$filename` for
+          environment variables using the [_EnvParserService_][] method
+          `parseEnv()`.
+
+        - Implementations MUST process each parsed environment variable
+          using the [_EnvSetterService_][] method `addEnv()`.
+
+        - Implementations MUST return `$this`.
+
+    - Notes:
+
+        - **Existing environment variables are not replaced.** This presumes
+          that the existing environment variables are definitive, and only
+          adds new variables to the environment.
+
+        - **This method is fluent.** Returning `$this` allows consumers to
+          make mutiple method calls in sequence.
+
+- ```php
+  public function loadEnvIfReadable(string $filename) : static;
+  ```
+    - An alias to `loadEnv()` that does not throw [_EnvLoaderThroable_][] when
+    the environment file is not readable.
+
+    - Directives:
+
+        - Implementations MUST treat this method as an alias to `loadEnv()`,
+          and MUST suppress [_EnvLoaderThrowable_][].
+
+    - Notes:
+
+        - **Sometimes an environment file is optional.** For example, one
+          strategy is to have a `.env` only in development, but not in
+          production. Another is to have a base `.env` file as well as an
+          optional deployment-specific environment file. This method allows
+          that the non-readability of a file is not an error by catching
+          [_EnvLoaderThrowable_][].
+
+- ```php
+  public function replaceEnv(string $filename) : static;
+  ```
+    - Replaces environment variables in `$_ENV` (and possibly elsewhere) as
+    parsed from an environment file.
+
+    - Directives:
+
+        - Implementations MUST throw [_EnvLoaderThrowable_][] if `$filename`
+          does not exist, is not a file, is not readable, or if reading from
+          `$filename` fails.
 
         - Implementations MUST parse the contents of `$filename` for
           environment variables using the [_EnvParserService_][] method
@@ -76,24 +126,23 @@ parsed from an environment file into `$_ENV` (and possibly elsewhere).
 
     - Notes:
 
+        - **Existing environment variables will be replaced.**  This presumes
+          that the environment file is definitive, and will overwrite
+          existing variables.
+
         - **This method is fluent.** Returning `$this` allows consumers to
-          load multiple files in sequence.
+          make mutiple method calls in sequence.
 
 - ```php
-  public function loadEnvIfExists(
-      string $filename,
-      bool $override = false,
-  ) : static;
+  public function replaceEnvIfReadable(string $filename) : static;
   ```
-    - An alias to `loadEnv()` that loads an environment file only if it exists.
+    - An alias to `replaceEnv()` that does not throw [_EnvLoaderThroable_][]
+    when the environment file is not readable.
 
     - Directives:
 
-        - Implementations MUST NOT attempt to load `$filename` if it does not
-          exist or is not a file; otherwise, implementations MUST behave
-          as if `loadEnv()` was called with the same arguments.
-
-        - Implementations MUST return `$this`.
+        - Implementations MUST treat this method as an alias to
+          `replaceEnv()` and MUST suppress [_EnvLoaderThrowable_][].
 
     - Notes:
 
@@ -101,36 +150,34 @@ parsed from an environment file into `$_ENV` (and possibly elsewhere).
           strategy is to have a `.env` only in development, but not in
           production. Another is to have a base `.env` file as well as an
           optional deployment-specific environment file. This method allows
-          that the non-existence of a file is not an error.
-
-        - **This method is fluent.** Returning `$this` allows consumers to
-          load multiple files in sequence.
+          that the non-readability of a file is not an error by catching
+          [_EnvLoaderThrowable_][].
 
 - ```php
-  public function assertEnv(array $names = []) : void;
+  public function assertEnv(string[] $names = []) : static;
   ```
     - Asserts that each of the environment variable `$names` has been set into
     `$_ENV` (and possibly elsewhere).
 
     - Directives:
 
-        - Implementations MUST throw [_EnvThrowable_][] if `$_ENV` is not
-          set for one or more of the environment variable `$names`.
+        - Implementations MUST throw [_EnvInvalidThrowable_][] if `$_ENV` is
+          not set for one or more of the environment variable `$names`.
 
-        - Implementations SHOULD throw [_EnvThrowable_][] if one or more of
-          of the environment variable `$names` is not present in other
-          environment vairable locations.
+        - Implementations SHOULD throw [_EnvInvalidThrowable_][] if one or
+          more of the environment variable `$names` is not set in other
+          environment variable locations.
+
+        - Implementations MUST return `$this`.
 
     - Notes:
 
-        - **Only `$_ENV` checking is required.** Implementations might
-          additionally check other locations, such as [`getenv()`][] or
+        - **Only `$_ENV` inspection is required.** Implementations might
+          additionally inspect other locations, such as [`getenv()`][] or
           [`apache_setenv()`][].
 
-        - **This method *is not* fluent.** Whereas the loading methods return
-          `$this` so that additional loading can continue, asserting that all
-          expected variables are set is to be done only after all loading is
-          complete.
+        - **This method is fluent.** Returning `$this` allows consumers to
+          make mutiple method calls in sequence.
 
 ### _EnvParserService_
 
@@ -151,45 +198,38 @@ variables.
 
     - Directives:
 
-        - Implementations MUST throw [_EnvThrowable_][] if parsing fails.
+        - Implementations MUST throw [_EnvParserThrowable_][] if parsing
+          fails.
 
         - Implementations MAY validate the parsed variables; implementations
-          doing so MUST throw [_EnvThrowable_][] on invalidity.
+          doing so MUST throw [_EnvInvalidThrowable_][] on invalidity.
 
         - Implementations MAY sanitize, normalize, transform, or otherwise
           modify the parsed variables.
 
 ### _EnvSetterService_
 
-The [_EnvSetterService_][] interface affords modifying an environment
-variable in `$_ENV` (and possibly elsewhere).
+The [_EnvSetterService_][] interface affords adding or replacing an
+environment variable in `$_ENV` (and possibly elsewhere).
 
 - Notes:
 
-    - **Only `$_ENV` modification is required.** Implementations might also
-      choose to modify other environment variable locations such as `$_SERVER`,
-      [`putenv()`][], [`apache_setenv()`][], [`define()`][], and so on.
+    - **Only `$_ENV` operation is required.** Implementations might also
+      choose to operate on other environment variable locations such as
+      `$_SERVER`, [`putenv()`][], [`apache_setenv()`][], and so on.
 
 #### _EnvSetterService_ Methods
 
 - ```php
-  public function setEnv(
-      string $name,
-      string|int|float|bool|null $value,
-      bool $override = false,
-  ) : void;
+  public function addEnv(string $name, string|int|float|bool|null $value) : void;
   ```
-    - Modifies `$_ENV` and possibly other environment variable locations.
+    - Adds an environment variable to `$_ENV` (and possibly elsewhere) if it
+    is not already set.
 
     - Directives:
 
-        - Implementations MUST examine `$_ENV[$name]`; when doing so ...
-
-            - Implementations MUST NOT modify `$_ENV[$name]` when it is
-              already set and `$override` is false.
-
-            - Implementations MUST unset `$_ENV[$name]` when the `$value` is
-              `null`.
+        - Implementations MUST NOT modify `$_ENV[$name]` when it is
+          already set or when `$value` is `null`; otherwise ...
 
             - Implementations MUST set `$_ENV[$name]` to string `0` when the
               `$value` is boolean `false`.
@@ -200,14 +240,43 @@ variable in `$_ENV` (and possibly elsewhere).
             - Implementations MUST set `$_ENV[$name]` to a `(string)` cast of
               the `$value` in all other cases.
 
-        - Implementations MAY examine other environment variable locations;
-          when doing so ...
+        - Implementations MAY add the environment variable `$name` as
+          appropriate to other environment locations, if and only if `$name`
+          is not already set in that location.
 
-            - Implementations MUST NOT modify a colliding environment
-              variable `$name` when `$override` is false.
+     - Notes:
 
-            - Implementations SHOULD otherwise modify the environment
-              variable `$name` as appropriate for that environment location.
+         - **String representations of `false` and empty-string can be easy
+           to confuse.** The rules specified above guarantee that a `0`
+           represents `false`, and that an empty string is just that: an
+           empty string. (Consumers may still cast these string values as
+           desired.)
+
+         - **Add environment variables in non-`$_ENV` locations as desired.**
+           Some implementations might also add to the `$_SERVER`
+           array, others might use [`putenv()`][], and so on.
+
+- ```php
+  public function setEnv(string $name, string|int|float|bool|null $value) : void;
+  ```
+    - Replaces an environment variable in `$_ENV` (and possibly elsewhere).
+
+    - Directives:
+
+        - Implementations MUST unset `$_ENV[$name]` when the `$value` is
+          `null`.
+
+        - Implementations MUST set `$_ENV[$name]` to string `0` when the
+          `$value` is boolean `false`.
+
+        - Implementations MUST set `$_ENV[$name]` to string `1` when the
+          `$value` is boolean `true`.
+
+        - Implementations MUST set `$_ENV[$name]` to a `(string)` cast of
+           the `$value` in all other cases.
+
+        - Implementations MAY replace the environment variable `$name` as
+          appropriate in other environment locations.
 
      - Notes:
 
@@ -218,10 +287,10 @@ variable in `$_ENV` (and possibly elsewhere).
            an empty string. (Consumers may still cast these string values as
            desired.)
 
-         - **Set or unset environment variables in non-`$_ENV` locations as
-           desired.** Some implementations might additionally modify the
-           `$_SERVER` array, some might set them using [`putenv()`][], some
-           might [`define()`][] them as constants, and so on.
+         - **Replace environment variables in non-`$_ENV` locations as
+           desired.** Some implementations might also do replacements
+           in the `$_SERVER` array, others might use [`putenv()`][], and so
+           on.
 
 ### _EnvGetter_
 
@@ -235,9 +304,9 @@ The [_EnvGetter_][] interface affords getting environment variable values.
 - Notes:
 
     - **Prefer copying environment variables into the implementation.** For
-      example, copy `$_ENV` or [`getenv()`][] into a property, then retrieve
-      values from that property. However, some implementations may find it
-      necessary to read from the global environment directly.
+      example, copy `$_ENV` into a property, then retrieve values from that
+      property. However, some implementations may find it necessary to read
+      from the global environment directly.
 
     - **Consider placing environment validation logic in the constructor.**
       Value objects are expected to self-validate, so checking for missing
@@ -256,6 +325,24 @@ The [_EnvGetter_][] interface affords getting environment variable values.
 
 The [_EnvThrowable_][] interface extends [_Throwable_][] to mark an
 [_Exception_][] as environment-related. It adds no class members.
+
+### _EnvLoaderThrowable_
+
+The [_EnvLoaderThrowable_][] interface extends [_EnvThrowable_][] to mark an
+[_Exception_][] as related to environment file loading. It adds no
+class members.
+
+### _EnvParserThrowable_
+
+The [_EnvParserThrowable_][] interface extends [_EnvThrowable_][] to mark an
+[_Exception_][] as related to environment string parsing. It adds no class
+members.
+
+### _EnvInvalidThrowable_
+
+The [_EnvInvalidThrowable_][] interface extends [_EnvThrowable_][] to mark an
+[_Exception_][] as related to environment variable invalidity. It adds no
+class members.
 
 ### _EnvTypeAliases_
 
@@ -317,11 +404,29 @@ method `assertEnv()`. Env-Interop advises that any further environment value
 validation is the responsibility of an [_EnvParserService_][] or of an
 [_EnvGetter_][] value object.
 
+### Why throw exceptions on file-not-found?
+
+When an environment file is specified for loading, 9 of the 11 projects with
+loaders throw an exception indicating file-not-found, making the specified
+files required.
+
+Of those 9, 2 allow suppressing the file-not-found exception, and
+the other two projects do not throw an exception on file-not-found, making the
+specified files optional.
+
+Env-Interop honors the majority design decision, such that a file specified for
+loading must be found. However, consumers may catch [_EnvLoaderThrowable_][]
+while loading environment files, and then ignore that exception; doing so makes
+the specified files optional.
+
 * * *
 
 [_EnvGetter_]: #envgetter
+[_EnvInvalidThrowable_]: #envinvalidthrowable
 [_EnvLoaderService_]: #envloaderservice
+[_EnvLoaderThrowable_]: #envloaderthrowable
 [_EnvParserService_]: #envparserservice
+[_EnvParserThrowable_]: #envparserthrowable
 [_EnvSetterService_]: #envsetterservice
 [_EnvThrowable_]: #envthrowable
 [_EnvTypeAliases_]: #envtypealiases

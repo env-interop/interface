@@ -14,9 +14,9 @@ namespace EnvInterop\Interface;
  * - Notes:
  *
  *     - **Prefer copying environment variables into the implementation.** For
- *       example, copy `$_ENV` or [`getenv()`][] into a property, then retrieve
- *       values from that property. However, some implementations may find it
- *       necessary to read from the global environment directly.
+ *       example, copy `$_ENV` into a property, then retrieve values from that
+ *       property. However, some implementations may find it necessary to read
+ *       from the global environment directly.
  *
  *     - **Consider placing environment validation logic in the constructor.**
  *       Value objects are expected to self-validate, so checking for missing

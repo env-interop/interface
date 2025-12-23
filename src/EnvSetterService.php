@@ -4,29 +4,25 @@ declare(strict_types=1);
 namespace EnvInterop\Interface;
 
 /**
- * The [_EnvSetterService_][] interface affords modifying an environment
- * variable in `$_ENV` (and possibly elsewhere).
+ * The [_EnvSetterService_][] interface affords adding or replacing an
+ * environment variable in `$_ENV` (and possibly elsewhere).
  *
  * - Notes:
  *
- *     - **Only `$_ENV` modification is required.** Implementations might also
- *       choose to modify other environment variable locations such as `$_SERVER`,
- *       [`putenv()`][], [`apache_setenv()`][], [`define()`][], and so on.
+ *     - **Only `$_ENV` operation is required.** Implementations might also
+ *       choose to operate on other environment variable locations such as
+ *       `$_SERVER`, [`putenv()`][], [`apache_setenv()`][], and so on.
  */
 interface EnvSetterService
 {
     /**
-     * Modifies `$_ENV` and possibly other environment variable locations.
+     * Adds an environment variable to `$_ENV` (and possibly elsewhere) if it
+     * is not already set.
      *
      * - Directives:
      *
-     *     - Implementations MUST examine `$_ENV[$name]`; when doing so ...
-     *
-     *         - Implementations MUST NOT modify `$_ENV[$name]` when it is
-     *           already set and `$override` is false.
-     *
-     *         - Implementations MUST unset `$_ENV[$name]` when the `$value` is
-     *           `null`.
+     *     - Implementations MUST NOT modify `$_ENV[$name]` when it is
+     *       already set or when `$value` is `null`; otherwise ...
      *
      *         - Implementations MUST set `$_ENV[$name]` to string `0` when the
      *           `$value` is boolean `false`.
@@ -37,14 +33,46 @@ interface EnvSetterService
      *         - Implementations MUST set `$_ENV[$name]` to a `(string)` cast of
      *           the `$value` in all other cases.
      *
-     *     - Implementations MAY examine other environment variable locations;
-     *       when doing so ...
+     *     - Implementations MAY add the environment variable `$name` as
+     *       appropriate to other environment locations, if and only if `$name`
+     *       is not already set in that location.
      *
-     *         - Implementations MUST NOT modify a colliding environment
-     *           variable `$name` when `$override` is false.
+     *  - Notes:
      *
-     *         - Implementations SHOULD otherwise modify the environment
-     *           variable `$name` as appropriate for that environment location.
+     *      - **String representations of `false` and empty-string can be easy
+     *        to confuse.** The rules specified above guarantee that a `0`
+     *        represents `false`, and that an empty string is just that: an
+     *        empty string. (Consumers may still cast these string values as
+     *        desired.)
+     *
+     *      - **Add environment variables in non-`$_ENV` locations as desired.**
+     *        Some implementations might also add to the `$_SERVER`
+     *        array, others might use [`putenv()`][], and so on.
+     */
+    public function addEnv(
+        string $name,
+        null|bool|int|float|string $value,
+    ) : void;
+
+    /**
+     * Replaces an environment variable in `$_ENV` (and possibly elsewhere).
+     *
+     * - Directives:
+     *
+     *     - Implementations MUST unset `$_ENV[$name]` when the `$value` is
+     *       `null`.
+     *
+     *     - Implementations MUST set `$_ENV[$name]` to string `0` when the
+     *       `$value` is boolean `false`.
+     *
+     *     - Implementations MUST set `$_ENV[$name]` to string `1` when the
+     *       `$value` is boolean `true`.
+     *
+     *     - Implementations MUST set `$_ENV[$name]` to a `(string)` cast of
+     *        the `$value` in all other cases.
+     *
+     *     - Implementations MAY replace the environment variable `$name` as
+     *       appropriate in other environment locations.
      *
      *  - Notes:
      *
@@ -55,14 +83,13 @@ interface EnvSetterService
      *        an empty string. (Consumers may still cast these string values as
      *        desired.)
      *
-     *      - **Set or unset environment variables in non-`$_ENV` locations as
-     *        desired.** Some implementations might additionally modify the
-     *        `$_SERVER` array, some might set them using [`putenv()`][], some
-     *        might [`define()`][] them as constants, and so on.
+     *      - **Replace environment variables in non-`$_ENV` locations as
+     *        desired.** Some implementations might also do replacements
+     *        in the `$_SERVER` array, others might use [`putenv()`][], and so
+     *        on.
      */
     public function setEnv(
         string $name,
         null|bool|int|float|string $value,
-        bool $override = false,
     ) : void;
 }

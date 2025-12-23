@@ -23,7 +23,7 @@ This package defines the following interfaces:
 
 - [_EnvParserService_][] affords parsing a string for environment variables.
 
-- [_EnvSetterService_][] affords modifying an environment variable in `$_ENV` (and possibly elsewhere).
+- [_EnvSetterService_][] affords adding or replacing an environment variable in `$_ENV` (and possibly elsewhere).
 
 - [_EnvGetter_][] affords getting environment variable values.
 
@@ -82,11 +82,29 @@ method `assertEnv()`. Env-Interop advises that any further environment value
 validation is the responsibility of an [_EnvParserService_][] or of an
 [_EnvGetter_][] value object.
 
+### Why throw exceptions on file-not-found?
+
+When an environment file is specified for loading, 9 of the 11 projects with
+loaders throw an exception indicating file-not-found, making the specified
+files required.
+
+Of those 9, 2 allow suppressing the file-not-found exception, and
+the other two projects do not throw an exception on file-not-found, making the
+specified files optional.
+
+Env-Interop honors the majority design decision, such that a file specified for
+loading must be found. However, consumers may catch [_EnvLoaderThrowable_][]
+while loading environment files, and then ignore that exception; doing so makes
+the specified files optional.
+
 * * *
 
 [_EnvGetter_]: #envgetter
+[_EnvInvalidThrowable_]: #envinvalidthrowable
 [_EnvLoaderService_]: #envloaderservice
+[_EnvLoaderThrowable_]: #envloaderthrowable
 [_EnvParserService_]: #envparserservice
+[_EnvParserThrowable_]: #envparserthrowable
 [_EnvSetterService_]: #envsetterservice
 [_EnvThrowable_]: #envthrowable
 [_EnvTypeAliases_]: #envtypealiases

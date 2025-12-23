@@ -178,7 +178,7 @@ However, most projects skip by default, while allowing an option to override.
 
 #### Loader Errors
 
-Most projects throw an exception if when the environment file is not found or is
+Most projects throw an exception when the environment file is not found or is
 not readable; two allow suppressing the exception. Other projects report failure
 without using exceptions.
 

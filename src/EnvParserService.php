@@ -23,15 +23,14 @@ interface EnvParserService
      *
      * - Directives:
      *
-     *     - Implementations MUST throw [_EnvThrowable_][] if parsing fails.
+     *     - Implementations MUST throw [_EnvParserThrowable_][] if parsing
+     *       fails.
      *
      *     - Implementations MAY validate the parsed variables; implementations
-     *       doing so MUST throw [_EnvThrowable_][] on invalidity.
+     *       doing so MUST throw [_EnvInvalidThrowable_][] on invalidity.
      *
      *     - Implementations MAY sanitize, normalize, transform, or otherwise
      *       modify the parsed variables.
-     *
-     * @param string $contents
      *
      * @return env_parsed_array
      */
