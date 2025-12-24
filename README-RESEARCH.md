@@ -112,7 +112,7 @@ None of the following projects had any obvious environment-specific loader, pars
 | josegonzalez    | `load(null\|string\|array $options = null) : Loader` |
 | koriym          | `load(string $dir, string $json = 'env.json') : stdClass` |
 | phpdevcom       | `load() : void` |
-| symfony         | `loadEnv(string $path, ?string $envKey = null, # the $_ENV key for the env name 'APP_ENV' string $defaultEnv = 'dev', array $testEnvs = ['test'], bool $overrideExistingVars = false) : void` |
+| symfony         | `loadEnv(string $path, ?string $envKey = null, string $defaultEnv = 'dev', array $testEnvs = ['test'], bool $overrideExistingVars = false) : void` |
 | tina4           | `final public function readParams(?string $environment) : void` |
 | vlucas          | `load() : array<string, ?string>` |
 | william-costa   | `load(string $dir) : void` |
@@ -195,11 +195,6 @@ without using exceptions.
 | vlucas          | x      | x            |                 |
 | william-costa   |        |              | Returns `false` |
 | zrcing          | x      |              |                 |
-
-#### Loader Types
-
-(phpdevcom converts *as it parses*: null, bool, int, float)
-
 
 ### Parsers
 
