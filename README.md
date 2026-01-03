@@ -86,7 +86,7 @@ parsed from environment files into `$_ENV` (and possibly elsewhere).
 - ```php
   public function loadEnvIfReadable(string $filename) : static;
   ```
-    - An alias to `loadEnv()` that does not throw [_EnvLoaderThroable_][] when
+    - An alias to `loadEnv()` that does not throw [_EnvLoaderThrowable_][] when
     the environment file is not readable.
 
     - Directives:
@@ -136,7 +136,7 @@ parsed from environment files into `$_ENV` (and possibly elsewhere).
 - ```php
   public function replaceEnvIfReadable(string $filename) : static;
   ```
-    - An alias to `replaceEnv()` that does not throw [_EnvLoaderThroable_][]
+    - An alias to `replaceEnv()` that does not throw [_EnvLoaderThrowable_][]
     when the environment file is not readable.
 
     - Directives:
@@ -403,21 +403,6 @@ The "required to be set" validation is provided by the [_EnvLoaderService_][]
 method `assertEnv()`. Env-Interop advises that any further environment value
 validation is the responsibility of an [_EnvParserService_][] or of an
 [_EnvGetter_][] value object.
-
-### Why throw exceptions on file-not-found?
-
-When an environment file is specified for loading, 9 of the 11 projects with
-loaders throw an exception indicating file-not-found, making the specified
-files required.
-
-Of those 9, 2 allow suppressing the file-not-found exception, and
-the other two projects do not throw an exception on file-not-found, making the
-specified files optional.
-
-Env-Interop honors the majority design decision, such that a file specified for
-loading must be found. However, consumers may catch [_EnvLoaderThrowable_][]
-while loading environment files, and then ignore that exception; doing so makes
-the specified files optional.
 
 * * *
 

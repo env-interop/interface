@@ -55,7 +55,7 @@ interface EnvLoaderService
     public function loadEnv(string $filename) : static;
 
     /**
-     * An alias to `loadEnv()` that does not throw [_EnvLoaderThroable_][] when
+     * An alias to `loadEnv()` that does not throw [_EnvLoaderThrowable_][] when
      * the environment file is not readable.
      *
      * - Directives:
@@ -105,7 +105,7 @@ interface EnvLoaderService
     public function replaceEnv(string $filename) : static;
 
     /**
-     * An alias to `replaceEnv()` that does not throw [_EnvLoaderThroable_][]
+     * An alias to `replaceEnv()` that does not throw [_EnvLoaderThrowable_][]
      * when the environment file is not readable.
      *
      * - Directives:
