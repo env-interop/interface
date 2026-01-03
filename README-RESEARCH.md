@@ -89,7 +89,7 @@ None of the following projects had any obvious environment-specific loader, pars
 - [Joomla](https://github.com/joomla-framework/)
 - [Klein](https://github.com/klein/)
 - [Lithium](https://github.com/UnionOfRAD/)
-- [Lminas](https://github.com/laminas/)
+- [Laminas](https://github.com/laminas/)
 - [MediaWiki](https://github.com/wikimedia/mediawiki)
 - [Mezzio](https://github.com/mezzio/)
 - [Nette](https://github.com/nette/)
