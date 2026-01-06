@@ -77,10 +77,9 @@ Of the researched projects, a minority check to see if required environment
 variables are set. Of those, only one does any further validation of the
 environment variable values themselves.
 
-The "required to be set" validation is provided by the [_EnvLoaderService_][]
-method `assertEnv()`. Env-Interop advises that any further environment value
-validation is the responsibility of an [_EnvParserService_][] or of an
-[_EnvGetter_][] value object.
+As such, Env-Interop advises that environment value validation is the
+responsibility of an [_EnvParserService_][] and/or of an [_EnvGetter_][] value
+object.
 
 * * *
 

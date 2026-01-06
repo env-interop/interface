@@ -153,32 +153,6 @@ parsed from environment files into `$_ENV` (and possibly elsewhere).
           that the non-readability of a file is not an error by catching
           [_EnvLoaderThrowable_][].
 
-- ```php
-  public function assertEnv(string[] $names = []) : static;
-  ```
-    - Asserts that each of the environment variable `$names` has been set into
-    `$_ENV` (and possibly elsewhere).
-
-    - Directives:
-
-        - Implementations MUST throw [_EnvInvalidThrowable_][] if `$_ENV` is
-          not set for one or more of the environment variable `$names`.
-
-        - Implementations SHOULD throw [_EnvInvalidThrowable_][] if one or
-          more of the environment variable `$names` is not set in other
-          environment variable locations.
-
-        - Implementations MUST return `$this`.
-
-    - Notes:
-
-        - **Only `$_ENV` inspection is required.** Implementations might
-          additionally inspect other locations, such as [`getenv()`][] or
-          [`apache_setenv()`][].
-
-        - **This method is fluent.** Returning `$this` allows consumers to
-          make mutiple method calls in sequence.
-
 ### _EnvParserService_
 
 The [_EnvParserService_][] interface affords parsing a string for environment
@@ -399,10 +373,9 @@ Of the researched projects, a minority check to see if required environment
 variables are set. Of those, only one does any further validation of the
 environment variable values themselves.
 
-The "required to be set" validation is provided by the [_EnvLoaderService_][]
-method `assertEnv()`. Env-Interop advises that any further environment value
-validation is the responsibility of an [_EnvParserService_][] or of an
-[_EnvGetter_][] value object.
+As such, Env-Interop advises that environment value validation is the
+responsibility of an [_EnvParserService_][] and/or of an [_EnvGetter_][] value
+object.
 
 * * *
 

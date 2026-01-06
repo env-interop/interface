@@ -123,32 +123,4 @@ interface EnvLoaderService
      *       [_EnvLoaderThrowable_][].
      */
     public function replaceEnvIfReadable(string $filename) : static;
-
-    /**
-     * Asserts that each of the environment variable `$names` has been set into
-     * `$_ENV` (and possibly elsewhere).
-     *
-     * - Directives:
-     *
-     *     - Implementations MUST throw [_EnvInvalidThrowable_][] if `$_ENV` is
-     *       not set for one or more of the environment variable `$names`.
-     *
-     *     - Implementations SHOULD throw [_EnvInvalidThrowable_][] if one or
-     *       more of the environment variable `$names` is not set in other
-     *       environment variable locations.
-     *
-     *     - Implementations MUST return `$this`.
-     *
-     * - Notes:
-     *
-     *     - **Only `$_ENV` inspection is required.** Implementations might
-     *       additionally inspect other locations, such as [`getenv()`][] or
-     *       [`apache_setenv()`][].
-     *
-     *     - **This method is fluent.** Returning `$this` allows consumers to
-     *       make mutiple method calls in sequence.
-     *
-     * @param string[] $names
-     */
-    public function assertEnv(array $names = []) : static;
 }
