@@ -1,9 +1,9 @@
 # Env-Interop Standard Interface Package
 
-This package provides interoperable interfaces to load and parse environment
-files, and encapsulate environment variables, in PHP 8.4 or later. It reflects,
-refines, and reconciles the common practices identified within
-[several pre-existing projects][README-RESEARCH.md].
+Env-Interop provides an interoperable package of standard interfaces for loading
+and parsing environment files, and encapsulating environment variables, in PHP
+8.4 or later. It reflects, refines, and reconciles the common practices
+identified within [several pre-existing projects][README-RESEARCH.md].
 
 The standards provided in this package are also informed by:
 
@@ -17,19 +17,7 @@ interpreted as described in [BCP 14][] ([RFC 2119][], [RFC 8174][]).
 
 ## Interfaces
 
-This package defines the following interfaces:
-
-- [_EnvLoaderService_][] affords loading environment variables parsed from an environment file into `$_ENV` (and possibly elsewhere).
-
-- [_EnvParserService_][] affords parsing a string for environment variables.
-
-- [_EnvSetterService_][] affords adding or replacing an environment variable in `$_ENV` (and possibly elsewhere).
-
-- [_EnvGetter_][] affords getting environment variable values.
-
-- [_EnvThrowable_][] interface extends [_Throwable_][] to mark an [_Exception_][] as environment-related.
-
-- [_EnvTypeAliases_][] provides PHPStan type aliases to aid static analysis.
+{{= list }}
 
 {{= docs }}
 

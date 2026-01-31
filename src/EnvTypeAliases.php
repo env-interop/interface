@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace EnvInterop\Interface;
 
 /**
- * The [_EnvTypeAliases_][] interface provides PHPStan type aliases to
+ * [_EnvTypeAliases_][] interface provides PHPStan type aliases to
  * aid static analysis.
  *
  * - ```

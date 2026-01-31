@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace EnvInterop\Interface;
 
 /**
- * The [_EnvGetter_][] interface affords getting environment variable values.
+ * [_EnvGetter_][] affords getting environment variable values.
  *
  * - Directives:
  *

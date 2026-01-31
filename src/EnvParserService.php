@@ -6,7 +6,7 @@ namespace EnvInterop\Interface;
 use EnvInterop\Interface\EnvTypeAliases;
 
 /**
- * The [_EnvParserService_][] interface affords parsing a string for environment
+ * [_EnvParserService_][] interface affords parsing a string for environment
  * variables.
  *
  * - Notes:

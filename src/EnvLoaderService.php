@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace EnvInterop\Interface;
 
 /**
- * The [_EnvLoaderService_][] interface affords loading environment variables
+ * [_EnvLoaderService_][] interface affords loading environment variables
  * parsed from environment files into `$_ENV` (and possibly elsewhere).
  *
  * - Notes:
@@ -41,16 +41,13 @@ interface EnvLoaderService
      *     - Implementations MUST process each parsed environment variable
      *       using the [_EnvSetterService_][] method `addEnv()`.
      *
-     *     - Implementations MUST return `$this`.
-     *
      * - Notes:
      *
      *     - **Existing environment variables are not replaced.** This presumes
      *       that the existing environment variables are definitive, and only
      *       adds new variables to the environment.
      *
-     *     - **This method is fluent.** Returning `$this` allows consumers to
-     *       make mutiple method calls in sequence.
+     * @return $this
      */
     public function loadEnv(string $filename) : static;
 
@@ -71,6 +68,8 @@ interface EnvLoaderService
      *       optional deployment-specific environment file. This method allows
      *       that the non-readability of a file is not an error by catching
      *       [_EnvLoaderThrowable_][].
+     *
+     * @return $this
      */
     public function loadEnvIfReadable(string $filename) : static;
 
@@ -91,16 +90,13 @@ interface EnvLoaderService
      *     - Implementations MUST process each parsed environment variable
      *       using the [_EnvSetterService_][] method `setEnv()`.
      *
-     *     - Implementations MUST return `$this`.
-     *
      * - Notes:
      *
      *     - **Existing environment variables will be replaced.**  This presumes
      *       that the environment file is definitive, and will overwrite
      *       existing variables.
      *
-     *     - **This method is fluent.** Returning `$this` allows consumers to
-     *       make mutiple method calls in sequence.
+     * @return $this
      */
     public function replaceEnv(string $filename) : static;
 
@@ -121,6 +117,8 @@ interface EnvLoaderService
      *       optional deployment-specific environment file. This method allows
      *       that the non-readability of a file is not an error by catching
      *       [_EnvLoaderThrowable_][].
+     *
+     * @return $this
      */
     public function replaceEnvIfReadable(string $filename) : static;
 }

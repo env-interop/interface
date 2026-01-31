@@ -1,9 +1,9 @@
 # Env-Interop Standard Interface Package
 
-This package provides interoperable interfaces to load and parse environment
-files, and encapsulate environment variables, in PHP 8.4 or later. It reflects,
-refines, and reconciles the common practices identified within
-[several pre-existing projects][README-RESEARCH.md].
+Env-Interop provides an interoperable package of standard interfaces for loading
+and parsing environment files, and encapsulating environment variables, in PHP
+8.4 or later. It reflects, refines, and reconciles the common practices
+identified within [several pre-existing projects][README-RESEARCH.md].
 
 The standards provided in this package are also informed by:
 
@@ -17,23 +17,27 @@ interpreted as described in [BCP 14][] ([RFC 2119][], [RFC 8174][]).
 
 ## Interfaces
 
-This package defines the following interfaces:
+- [_EnvLoaderService_][] interface affords loading environment variables parsed from environment files into `$_ENV` (and possibly elsewhere).
 
-- [_EnvLoaderService_][] affords loading environment variables parsed from an environment file into `$_ENV` (and possibly elsewhere).
+- [_EnvParserService_][] interface affords parsing a string for environment variables.
 
-- [_EnvParserService_][] affords parsing a string for environment variables.
-
-- [_EnvSetterService_][] affords adding or replacing an environment variable in `$_ENV` (and possibly elsewhere).
+- [_EnvSetterService_][] interface affords adding or replacing an environment variable in `$_ENV` (and possibly elsewhere).
 
 - [_EnvGetter_][] affords getting environment variable values.
 
 - [_EnvThrowable_][] interface extends [_Throwable_][] to mark an [_Exception_][] as environment-related.
 
-- [_EnvTypeAliases_][] provides PHPStan type aliases to aid static analysis.
+- [_EnvLoaderThrowable_][] interface extends [_EnvThrowable_][] to mark an [_Exception_][] as related to environment file loading.
+
+- [_EnvParserThrowable_][] interface extends [_EnvThrowable_][] to mark an [_Exception_][] as related to environment string parsing.
+
+- [_EnvInvalidThrowable_][] interface extends [_EnvThrowable_][] to mark an [_Exception_][] as related to environment variable invalidity.
+
+- [_EnvTypeAliases_][] interface provides PHPStan type aliases to aid static analysis.
 
 ### _EnvLoaderService_
 
-The [_EnvLoaderService_][] interface affords loading environment variables
+[_EnvLoaderService_][] interface affords loading environment variables
 parsed from environment files into `$_ENV` (and possibly elsewhere).
 
 - Notes:
@@ -54,7 +58,7 @@ parsed from environment files into `$_ENV` (and possibly elsewhere).
 #### _EnvLoaderService_ Methods
 
 - ```php
-  public function loadEnv(string $filename) : static;
+  public function loadEnv(string $filename) : $this;
   ```
     - Adds environment variables to `$_ENV` (and possibly elsewhere) as
     parsed from an environment file.
@@ -72,19 +76,14 @@ parsed from environment files into `$_ENV` (and possibly elsewhere).
         - Implementations MUST process each parsed environment variable
           using the [_EnvSetterService_][] method `addEnv()`.
 
-        - Implementations MUST return `$this`.
-
     - Notes:
 
         - **Existing environment variables are not replaced.** This presumes
           that the existing environment variables are definitive, and only
           adds new variables to the environment.
 
-        - **This method is fluent.** Returning `$this` allows consumers to
-          make mutiple method calls in sequence.
-
 - ```php
-  public function loadEnvIfReadable(string $filename) : static;
+  public function loadEnvIfReadable(string $filename) : $this;
   ```
     - An alias to `loadEnv()` that does not throw [_EnvLoaderThrowable_][] when
     the environment file is not readable.
@@ -104,7 +103,7 @@ parsed from environment files into `$_ENV` (and possibly elsewhere).
           [_EnvLoaderThrowable_][].
 
 - ```php
-  public function replaceEnv(string $filename) : static;
+  public function replaceEnv(string $filename) : $this;
   ```
     - Replaces environment variables in `$_ENV` (and possibly elsewhere) as
     parsed from an environment file.
@@ -122,19 +121,14 @@ parsed from environment files into `$_ENV` (and possibly elsewhere).
         - Implementations MUST process each parsed environment variable
           using the [_EnvSetterService_][] method `setEnv()`.
 
-        - Implementations MUST return `$this`.
-
     - Notes:
 
         - **Existing environment variables will be replaced.**  This presumes
           that the environment file is definitive, and will overwrite
           existing variables.
 
-        - **This method is fluent.** Returning `$this` allows consumers to
-          make mutiple method calls in sequence.
-
 - ```php
-  public function replaceEnvIfReadable(string $filename) : static;
+  public function replaceEnvIfReadable(string $filename) : $this;
   ```
     - An alias to `replaceEnv()` that does not throw [_EnvLoaderThrowable_][]
     when the environment file is not readable.
@@ -155,7 +149,7 @@ parsed from environment files into `$_ENV` (and possibly elsewhere).
 
 ### _EnvParserService_
 
-The [_EnvParserService_][] interface affords parsing a string for environment
+[_EnvParserService_][] interface affords parsing a string for environment
 variables.
 
 - Notes:
@@ -183,7 +177,7 @@ variables.
 
 ### _EnvSetterService_
 
-The [_EnvSetterService_][] interface affords adding or replacing an
+[_EnvSetterService_][] interface affords adding or replacing an
 environment variable in `$_ENV` (and possibly elsewhere).
 
 - Notes:
@@ -268,7 +262,7 @@ environment variable in `$_ENV` (and possibly elsewhere).
 
 ### _EnvGetter_
 
-The [_EnvGetter_][] interface affords getting environment variable values.
+[_EnvGetter_][] affords getting environment variable values.
 
 - Directives:
 
@@ -297,30 +291,35 @@ The [_EnvGetter_][] interface affords getting environment variable values.
 
 ### _EnvThrowable_
 
-The [_EnvThrowable_][] interface extends [_Throwable_][] to mark an
-[_Exception_][] as environment-related. It adds no class members.
+[_EnvThrowable_][] interface extends [_Throwable_][] to mark an
+[_Exception_][] as environment-related.
+
+It adds no class members.
 
 ### _EnvLoaderThrowable_
 
-The [_EnvLoaderThrowable_][] interface extends [_EnvThrowable_][] to mark an
-[_Exception_][] as related to environment file loading. It adds no
-class members.
+[_EnvLoaderThrowable_][] interface extends [_EnvThrowable_][] to mark an
+[_Exception_][] as related to environment file loading.
+
+It adds no class members.
 
 ### _EnvParserThrowable_
 
-The [_EnvParserThrowable_][] interface extends [_EnvThrowable_][] to mark an
-[_Exception_][] as related to environment string parsing. It adds no class
-members.
+[_EnvParserThrowable_][] interface extends [_EnvThrowable_][] to mark an
+[_Exception_][] as related to environment string parsing.
+
+It adds no class members.
 
 ### _EnvInvalidThrowable_
 
-The [_EnvInvalidThrowable_][] interface extends [_EnvThrowable_][] to mark an
-[_Exception_][] as related to environment variable invalidity. It adds no
-class members.
+[_EnvInvalidThrowable_][] interface extends [_EnvThrowable_][] to mark an
+[_Exception_][] as related to environment variable invalidity.
+
+It adds no class members.
 
 ### _EnvTypeAliases_
 
-The [_EnvTypeAliases_][] interface provides PHPStan type aliases to
+[_EnvTypeAliases_][] interface provides PHPStan type aliases to
 aid static analysis.
 
 - ```
