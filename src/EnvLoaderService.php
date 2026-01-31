@@ -35,11 +35,12 @@ interface EnvLoaderService
      *       `$filename` fails.
      *
      *     - Implementations MUST parse the contents of `$filename` for
-     *       environment variables using the [_EnvParserService_][] method
-     *       `parseEnv()`.
+     *       environment variables using logic equivalent to that of the
+     *       [_EnvParserService_][] method `parseEnv()`.
      *
      *     - Implementations MUST process each parsed environment variable
-     *       using the [_EnvSetterService_][] method `addEnv()`.
+     *       using logic equivalent to that of the [_EnvSetterService_][] method
+     *       `addEnv()`.
      *
      * - Notes:
      *
@@ -84,11 +85,12 @@ interface EnvLoaderService
      *       `$filename` fails.
      *
      *     - Implementations MUST parse the contents of `$filename` for
-     *       environment variables using the [_EnvParserService_][] method
-     *       `parseEnv()`.
+     *       environment variables using logic equivalent to that of the
+     *       [_EnvParserService_][] method `parseEnv()`.
      *
      *     - Implementations MUST process each parsed environment variable
-     *       using the [_EnvSetterService_][] method `setEnv()`.
+     *       using logic equivalent to that of the [_EnvSetterService_][] method
+     *       `setEnv()`.
      *
      * - Notes:
      *
