@@ -14,7 +14,7 @@
         }
     ],
     "require": {
-        "php": "^8.4"
+        "php": ">=8.4"
     },
     "autoload": {
         "psr-4" : {
