@@ -191,7 +191,7 @@ environment variable in `$_ENV` (and possibly elsewhere).
 #### _EnvSetterService_ Methods
 
 - ```php
-  public function addEnv(string $name, string|int|float|bool|null $value) : void;
+  public function addEnv(string $name, null|bool|int|float|string $value) : void;
   ```
     - Adds an environment variable to `$_ENV` (and possibly elsewhere) if it
     is not already set.
@@ -227,7 +227,7 @@ environment variable in `$_ENV` (and possibly elsewhere).
            array, others might use [`putenv()`][], and so on.
 
 - ```php
-  public function setEnv(string $name, string|int|float|bool|null $value) : void;
+  public function setEnv(string $name, null|bool|int|float|string $value) : void;
   ```
     - Replaces an environment variable in `$_ENV` (and possibly elsewhere).
 
@@ -325,7 +325,7 @@ It adds no class members.
 aid static analysis.
 
 - ```
-  env_parsed_array array<string,null|bool|int|float|string>
+  env_parsed_array array<array-key,null|bool|int|float|string>
   ```
     - An `array` of variable names and values as parsed from the contents
       of an environment file.
