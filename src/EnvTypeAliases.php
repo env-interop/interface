@@ -8,12 +8,12 @@ namespace EnvInterop\Interface;
  * aid static analysis.
  *
  * - ```
- *   env_parsed_array array<string,null|bool|int|float|string>
+ *   env_parsed_array array<array-key,null|bool|int|float|string>
  *   ```
  *     - An `array` of variable names and values as parsed from the contents
  *       of an environment file.
  *
- * @phpstan-type env_parsed_array array<string,null|bool|int|float|string>
+ * @phpstan-type env_parsed_array array<array-key,null|bool|int|float|string>
  */
 interface EnvTypeAliases
 {
