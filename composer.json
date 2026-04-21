@@ -28,11 +28,6 @@
         "star-interop/stardoc": "1.x-dev",
         "pmjones/php-styler": "0.x@dev"
     },
-    "autoload-dev": {
-        "psr-4" : {
-            "EnvInterop\\Interface\\": "tests/"
-        }
-    },
     "scripts": {
         "analyze": "./vendor/bin/phpstan",
         "check": "composer analyze"
