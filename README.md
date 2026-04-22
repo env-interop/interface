@@ -192,10 +192,18 @@ environment variable in `$_ENV` (and possibly elsewhere).
       choose to operate on other environment variable locations such as
       `$_SERVER`, [`putenv()`][], [`apache_setenv()`][], and so on.
 
+    - **Names may be `int` or `string`.** PHP coerces numeric string array
+      keys to `int` (e.g., `$_ENV['123']` is stored as `$_ENV[123]`), and
+      PHP's own [`putenv()`][] / [`getenv()`][] round-trip numeric names.
+      The `$name` parameter accepts either type to reflect that reality.
+
 #### _EnvSetterService_ Methods
 
 - ```php
-  public function addEnv(string $name, null|bool|int|float|string $value) : void;
+  public function addEnv(
+      int|string $name,
+      null|bool|int|float|string $value,
+  ) : void;
   ```
     - Adds an environment variable to `$_ENV` (and possibly elsewhere) if it
     is not already set.
@@ -231,7 +239,10 @@ environment variable in `$_ENV` (and possibly elsewhere).
            array, others might use [`putenv()`][], and so on.
 
 - ```php
-  public function setEnv(string $name, null|bool|int|float|string $value) : void;
+  public function setEnv(
+      int|string $name,
+      null|bool|int|float|string $value,
+  ) : void;
   ```
     - Replaces an environment variable in `$_ENV` (and possibly elsewhere).
 
