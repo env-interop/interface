@@ -55,6 +55,10 @@ parsed from environment files into `$_ENV` (and possibly elsewhere).
     - **Only `$_ENV` loading is required.** Cf. the [_EnvSetterService_][]
       interface notes.
 
+    - **Methods return `static` for fluent chaining.** Layered file loading
+      reads naturally as
+      `$loader->loadEnv($base)->replaceEnvIfReadable($local)`.
+
 #### _EnvLoaderService_ Methods
 
 - ```php
@@ -283,6 +287,12 @@ environment variable in `$_ENV` (and possibly elsewhere).
       or improperly-formatted environment variables is a normal behavior
       here.
 
+    - **Values are always returned as strings.** Environment values are
+      stored as strings by the corresponding [_EnvSetterService_][] (with
+      `true` cast to `"1"`, `false` to `"0"`, and `null` unsetting); the
+      getter does not reverse that casting. Consumers cast back to the
+      desired type as needed.
+
 #### _EnvGetter_ Methods
 
 - ```php
@@ -316,6 +326,16 @@ It adds no class members.
 
 [_EnvInvalidThrowable_][] interface extends [_EnvThrowable_][] to mark an
 [_Exception_][] as related to environment variable invalidity.
+
+- Notes:
+
+    - **Invalidity is cross-cutting.** Implementations of
+      [_EnvParserService_][] MUST throw this when parsed values fail
+      validation; implementations of [_EnvGetter_][] MAY throw this during
+      constructor validation. Consumers that want to catch all invalidity
+      should catch [_EnvInvalidThrowable_][] (or [_EnvThrowable_][])
+      directly, rather than a narrower sibling such as
+      [_EnvParserThrowable_][].
 
 It adds no class members.
 
