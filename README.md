@@ -192,10 +192,13 @@ environment variable in `$_ENV` (and possibly elsewhere).
       choose to operate on other environment variable locations such as
       `$_SERVER`, [`putenv()`][], [`apache_setenv()`][], and so on.
 
-    - **Names may be `int` or `string`.** PHP coerces numeric string array
-      keys to `int` (e.g., `$_ENV['123']` is stored as `$_ENV[123]`), and
-      PHP's own [`putenv()`][] / [`getenv()`][] round-trip numeric names.
-      The `$name` parameter accepts either type to reflect that reality.
+    - **Names may be `int` or `string`.** Environment variable names are
+      typically regarded to be only strings. However, PHP coerces numeric
+      string array keys to integers. For example, the numeric string key
+      `$_ENV['123']` will be retained not as a string but as an integer
+      (i.e., `$_ENV[123]`). Likewise, `putenv('123=foo')` will cause
+      [`getenv()`][] to return `[123 => 'foo']`. This interface reflects
+      that PHP behavior.
 
 #### _EnvSetterService_ Methods
 
