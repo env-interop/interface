@@ -22,6 +22,12 @@ namespace EnvInterop\Interface;
  *       Value objects are expected to self-validate, so checking for missing
  *       or improperly-formatted environment variables is a normal behavior
  *       here.
+ *
+ *     - **Values are always returned as strings.** Environment values are
+ *       stored as strings by the corresponding [_EnvSetterService_][] (with
+ *       `true` cast to `"1"`, `false` to `"0"`, and `null` unsetting); the
+ *       getter does not reverse that casting. Consumers cast back to the
+ *       desired type as needed.
  */
 interface EnvGetter
 {

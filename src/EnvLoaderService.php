@@ -21,6 +21,10 @@ namespace EnvInterop\Interface;
  *
  *     - **Only `$_ENV` loading is required.** Cf. the [_EnvSetterService_][]
  *       interface notes.
+ *
+ *     - **Methods return `static` for fluent chaining.** Layered file loading
+ *       reads naturally as
+ *       `$loader->loadEnv($base)->replaceEnvIfReadable($local)`.
  */
 interface EnvLoaderService
 {
