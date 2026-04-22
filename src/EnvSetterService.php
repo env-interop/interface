@@ -12,6 +12,11 @@ namespace EnvInterop\Interface;
  *     - **Only `$_ENV` operation is required.** Implementations might also
  *       choose to operate on other environment variable locations such as
  *       `$_SERVER`, [`putenv()`][], [`apache_setenv()`][], and so on.
+ *
+ *     - **Names may be `int` or `string`.** PHP coerces numeric string array
+ *       keys to `int` (e.g., `$_ENV['123']` is stored as `$_ENV[123]`), and
+ *       PHP's own [`putenv()`][] / [`getenv()`][] round-trip numeric names.
+ *       The `$name` parameter accepts either type to reflect that reality.
  */
 interface EnvSetterService
 {
@@ -50,7 +55,7 @@ interface EnvSetterService
      *        array, others might use [`putenv()`][], and so on.
      */
     public function addEnv(
-        string $name,
+        int|string $name,
         null|bool|int|float|string $value,
     ) : void;
 
@@ -89,7 +94,7 @@ interface EnvSetterService
      *        on.
      */
     public function setEnv(
-        string $name,
+        int|string $name,
         null|bool|int|float|string $value,
     ) : void;
 }
