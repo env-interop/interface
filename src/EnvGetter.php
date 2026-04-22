@@ -23,6 +23,13 @@ namespace EnvInterop\Interface;
  *       or improperly-formatted environment variables is a normal behavior
  *       here.
  *
+ *     - **Names may be `int` or `string`.** The corresponding
+ *       [_EnvSetterService_][] accepts either type because PHP coerces
+ *       numeric string array keys to integers; this interface matches that
+ *       signature so consumers can retrieve numeric-named values without
+ *       re-casting. See the [_EnvSetterService_][] note for the underlying
+ *       PHP behavior.
+ *
  *     - **Values are always returned as strings.** Environment values are
  *       stored as strings by the corresponding [_EnvSetterService_][] (with
  *       `true` cast to `"1"`, `false` to `"0"`, and `null` unsetting); the
@@ -35,5 +42,5 @@ interface EnvGetter
      * Returns the `$name` environment variable value as a string, or `null` if
      * it is not set in the environment.
      */
-    public function getEnv(string $name) : ?string;
+    public function getEnv(int|string $name) : ?string;
 }
