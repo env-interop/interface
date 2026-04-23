@@ -1,6 +1,6 @@
 # Change Log
 
-## NEXT
+## 1.0.0-beta2
 
 Incorporated clarifications from public review:
 
