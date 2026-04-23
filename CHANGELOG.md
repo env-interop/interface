@@ -1,5 +1,24 @@
 # Change Log
 
+## NEXT
+
+Incorporated clarifications from public review:
+
+- Widened `$name` to `int|string` in _EnvSetterService_ methods
+  `addEnv()` and `setEnv()`, and in _EnvGetter_ method `getEnv()`; PHP
+  coerces numeric string array keys to `int`, and `putenv()`/`getenv()`
+  round-trip numeric names.
+
+- Widened `env_parsed_array` key type from `string` to `array-key`.
+
+- Added a note on _EnvGetter_ that values are always returned as
+  strings.
+
+- Added a note on _EnvLoaderService_ that methods return `static` for
+  fluent chaining.
+
+- Tooling and documentation refinements.
+
 ## 1.0.0-beta1
 
 Incorporated changes from review:
