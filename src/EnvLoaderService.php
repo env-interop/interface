@@ -4,8 +4,8 @@ declare(strict_types=1);
 namespace EnvInterop\Interface;
 
 /**
- * [_EnvLoaderService_][] interface affords loading environment variables
- * parsed from environment files into `$_ENV` (and possibly elsewhere).
+ * [_EnvLoaderService_][] affords loading environment variables parsed from
+ * environment files into `$_ENV` (and possibly elsewhere).
  *
  * - Notes:
  *

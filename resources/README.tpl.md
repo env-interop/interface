@@ -1,5 +1,8 @@
 # Env-Interop Standard Interface Package
 
+[![PDS Skeleton](https://img.shields.io/badge/pds-skeleton-blue.svg?style=flat-square)](https://github.com/php-pds/skeleton)
+[![PDS Composer Script Names](https://img.shields.io/badge/pds-composer--script--names-blue?style=flat-square)](https://github.com/php-pds/composer-script-names)
+
 Env-Interop provides an interoperable package of standard interfaces for loading
 and parsing environment files, and encapsulating environment variables, in PHP
 8.4 or later. It reflects, refines, and reconciles the common practices
@@ -15,6 +18,8 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD",
 "SHOULD NOT", "RECOMMENDED",  "MAY", and "OPTIONAL" in this document are to be
 interpreted as described in [BCP 14][] ([RFC 2119][], [RFC 8174][]).
 
+This package attempts to adhere to the [Package Development Standards](https://php-pds.com/) approach to [naming and versioning](https://php-pds.com/#naming-and-versioning).
+
 ## Interfaces
 
 {{= list }}
@@ -23,14 +28,11 @@ interpreted as described in [BCP 14][] ([RFC 2119][], [RFC 8174][]).
 
 ## Implementations
 
-- Directives:
+Implementations MAY define additional class members not defined in these interfaces.
 
-    - Implementations MAY define additional class members not defined in these
-      interfaces.
+Notes:
 
-- Notes:
-
-    - **Reference implementations** may be found at <https://github.com/env-interop/impl>.
+- **Reference implementations** are available at <https://github.com/env-interop/impl>.
 
 ## Q & A
 
@@ -86,7 +88,7 @@ object.
 [`define()`]: https://php.net/define
 [`getenv()`]: https://php.net/getenv
 [`putenv()`]: https://php.net/putenv
-[BCP 14]: https://www.rfc-editor.org/info/bcp14
+[BCP 14]: https://datatracker.ietf.org/doc/bcp14/
 [README-RESEARCH.md]: ./README-RESEARCH.md
 [RFC 2119]: https://datatracker.ietf.org/doc/html/rfc2119
 [RFC 8174]: https://datatracker.ietf.org/doc/html/rfc8174

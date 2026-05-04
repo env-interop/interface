@@ -4,8 +4,8 @@ declare(strict_types=1);
 namespace EnvInterop\Interface;
 
 /**
- * [_EnvSetterService_][] interface affords adding or replacing an
- * environment variable in `$_ENV` (and possibly elsewhere).
+ * [_EnvSetterService_][] affords adding or replacing an environment variable
+ * in `$_ENV` (and possibly elsewhere).
  *
  * - Notes:
  *

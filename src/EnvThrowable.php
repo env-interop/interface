@@ -6,8 +6,8 @@ namespace EnvInterop\Interface;
 use Throwable;
 
 /**
- * [_EnvThrowable_][] interface extends [_Throwable_][] to mark an
- * [_Exception_][] as environment-related.
+ * [_EnvThrowable_][] extends [_Throwable_][] to mark an [_Exception_][] as
+ * environment-related.
  *
  * It adds no class members.
  */
