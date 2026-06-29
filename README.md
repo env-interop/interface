@@ -423,7 +423,6 @@ object.
 [_Exception_]: https://php.net/Exception
 [_Throwable_]: https://php.net/Throwable
 [`apache_setenv()`]: https://php.net/apache_setenv
-[`define()`]: https://php.net/define
 [`getenv()`]: https://php.net/getenv
 [`putenv()`]: https://php.net/putenv
 [BCP 14]: https://datatracker.ietf.org/doc/bcp14/
