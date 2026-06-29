@@ -293,6 +293,9 @@ in `$_ENV` (and possibly elsewhere).
     - Implementations SHOULD treat this as an interface to a value object,
       but MAY treat it as a global values reader.
 
+    - Implementations MAY validate the environment variables; implementations
+      doing so MUST throw [_EnvInvalidThrowable_][] on invalidity.
+
 - Notes:
 
     - **Prefer copying environment variables into the implementation.** For
