@@ -45,17 +45,20 @@ interface EnvSetterService
      *       appropriate to other environment locations, if and only if `$name`
      *       is not already set in that location.
      *
-     *  - Notes:
+     * - Notes:
      *
-     *      - **String representations of `false` and empty-string can be easy
-     *        to confuse.** The rules specified above guarantee that a `0`
-     *        represents `false`, and that an empty string is just that: an
-     *        empty string. (Consumers may still cast these string values as
-     *        desired.)
+     *     - **String representations of `false` and empty-string can be easy
+     *       to confuse.** The rules specified above guarantee that a `0`
+     *       represents `false`, and that an empty string is just that: an
+     *       empty string.
      *
-     *      - **Add environment variables in non-`$_ENV` locations as desired.**
-     *        Some implementations might also add to the `$_SERVER`
-     *        array, others might use [`putenv()`][], and so on.
+     *     - **A `null` value is skipped, not removed.** When `$value` is
+     *       `null`, `addEnv()` leaves `$_ENV[$name]` untouched rather than
+     *       unsetting it; use `setEnv()` to remove an existing variable.
+     *
+     *     - **Add environment variables in non-`$_ENV` locations as desired.**
+     *       Some implementations might also add to the `$_SERVER`
+     *       array, others might use [`putenv()`][], and so on.
      */
     public function addEnv(
         int|string $name,
@@ -82,19 +85,18 @@ interface EnvSetterService
      *     - Implementations MAY replace the environment variable `$name` as
      *       appropriate in other environment locations.
      *
-     *  - Notes:
+     * - Notes:
      *
-     *      - **String representations of `null`, `false`, and empty-string can
-     *        be easy to confuse.** The rules specified above guarantee that a
-     *        missing environment variable represents `null`, that a string
-     *        `0` represents `false`, and that an empty string is just that:
-     *        an empty string. (Consumers may still cast these string values as
-     *        desired.)
+     *     - **String representations of `null`, `false`, and empty-string can
+     *       be easy to confuse.** The rules specified above guarantee that a
+     *       missing environment variable represents `null`, that a string
+     *       `0` represents `false`, and that an empty string is just that:
+     *       an empty string.
      *
-     *      - **Replace environment variables in non-`$_ENV` locations as
-     *        desired.** Some implementations might also do replacements
-     *        in the `$_SERVER` array, others might use [`putenv()`][], and so
-     *        on.
+     *     - **Replace environment variables in non-`$_ENV` locations as
+     *       desired.** Some implementations might also do replacements
+     *       in the `$_SERVER` array, others might use [`putenv()`][], and so
+     *       on.
      */
     public function setEnv(
         int|string $name,

@@ -138,6 +138,11 @@ environment files into `$_ENV` (and possibly elsewhere).
           that the environment file is definitive, and will overwrite
           existing variables.
 
+        - **A parsed `null` value unsets rather than replaces.** Applying
+          `setEnv()` logic, a name whose parsed value is `null` is removed
+          from the environment, not set to an empty string; `loadEnv()`
+          skips it instead.
+
 - ```php
   public function replaceEnvIfReadable(string $filename) : $this;
   ```
@@ -233,17 +238,20 @@ in `$_ENV` (and possibly elsewhere).
           appropriate to other environment locations, if and only if `$name`
           is not already set in that location.
 
-     - Notes:
+    - Notes:
 
-         - **String representations of `false` and empty-string can be easy
-           to confuse.** The rules specified above guarantee that a `0`
-           represents `false`, and that an empty string is just that: an
-           empty string. (Consumers may still cast these string values as
-           desired.)
+        - **String representations of `false` and empty-string can be easy
+          to confuse.** The rules specified above guarantee that a `0`
+          represents `false`, and that an empty string is just that: an
+          empty string.
 
-         - **Add environment variables in non-`$_ENV` locations as desired.**
-           Some implementations might also add to the `$_SERVER`
-           array, others might use [`putenv()`][], and so on.
+        - **A `null` value is skipped, not removed.** When `$value` is
+          `null`, `addEnv()` leaves `$_ENV[$name]` untouched rather than
+          unsetting it; use `setEnv()` to remove an existing variable.
+
+        - **Add environment variables in non-`$_ENV` locations as desired.**
+          Some implementations might also add to the `$_SERVER`
+          array, others might use [`putenv()`][], and so on.
 
 - ```php
   public function setEnv(
@@ -270,19 +278,18 @@ in `$_ENV` (and possibly elsewhere).
         - Implementations MAY replace the environment variable `$name` as
           appropriate in other environment locations.
 
-     - Notes:
+    - Notes:
 
-         - **String representations of `null`, `false`, and empty-string can
-           be easy to confuse.** The rules specified above guarantee that a
-           missing environment variable represents `null`, that a string
-           `0` represents `false`, and that an empty string is just that:
-           an empty string. (Consumers may still cast these string values as
-           desired.)
+        - **String representations of `null`, `false`, and empty-string can
+          be easy to confuse.** The rules specified above guarantee that a
+          missing environment variable represents `null`, that a string
+          `0` represents `false`, and that an empty string is just that:
+          an empty string.
 
-         - **Replace environment variables in non-`$_ENV` locations as
-           desired.** Some implementations might also do replacements
-           in the `$_SERVER` array, others might use [`putenv()`][], and so
-           on.
+        - **Replace environment variables in non-`$_ENV` locations as
+          desired.** Some implementations might also do replacements
+          in the `$_SERVER` array, others might use [`putenv()`][], and so
+          on.
 
 ### _EnvGetter_
 
@@ -316,10 +323,10 @@ in `$_ENV` (and possibly elsewhere).
       PHP behavior.
 
     - **Values are always returned as strings.** Environment values are
-      stored as strings by the corresponding [_EnvSetterService_][] (with
-      `true` cast to `"1"`, `false` to `"0"`, and `null` unsetting); the
-      getter does not reverse that casting. Consumers cast back to the
-      desired type as needed.
+      set as strings by the corresponding [_EnvSetterService_][] (with
+      `true` cast to `"1"` and `false` to `"0"`); `getEnv()` returns that
+      string as-is. (Callers of `getEnv()` may cast the returned value as
+      desired.)
 
 #### _EnvGetter_ Methods
 

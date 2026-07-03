@@ -34,10 +34,10 @@ namespace EnvInterop\Interface;
  *       PHP behavior.
  *
  *     - **Values are always returned as strings.** Environment values are
- *       stored as strings by the corresponding [_EnvSetterService_][] (with
- *       `true` cast to `"1"`, `false` to `"0"`, and `null` unsetting); the
- *       getter does not reverse that casting. Consumers cast back to the
- *       desired type as needed.
+ *       set as strings by the corresponding [_EnvSetterService_][] (with
+ *       `true` cast to `"1"` and `false` to `"0"`); `getEnv()` returns that
+ *       string as-is. (Callers of `getEnv()` may cast the returned value as
+ *       desired.)
  */
 interface EnvGetter
 {

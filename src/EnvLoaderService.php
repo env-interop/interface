@@ -102,6 +102,11 @@ interface EnvLoaderService
      *       that the environment file is definitive, and will overwrite
      *       existing variables.
      *
+     *     - **A parsed `null` value unsets rather than replaces.** Applying
+     *       `setEnv()` logic, a name whose parsed value is `null` is removed
+     *       from the environment, not set to an empty string; `loadEnv()`
+     *       skips it instead.
+     *
      * @return $this
      */
     public function replaceEnv(string $filename) : static;
