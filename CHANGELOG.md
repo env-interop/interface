@@ -1,5 +1,16 @@
 # Change Log
 
+## 1.0.0
+
+First stable release.
+
+- Added notes clarifying `null` handling: `addEnv()` skips a `null` value;
+  `replaceEnv()` unsets on a parsed `null`, mirroring `setEnv()`.
+
+- Refined the _EnvGetter_ note on returned string values.
+
+- Documentation and formatting refinements.
+
 ## 1.0.0-beta2
 
 Incorporated clarifications from public review:
